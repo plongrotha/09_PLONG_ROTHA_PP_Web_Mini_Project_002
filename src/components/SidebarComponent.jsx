@@ -13,41 +13,25 @@ import {
 import { Input } from "./ui/input";
 
 export default function SidebarComponent() {
-  const [workspaces, setWorkspaces] = useState([
-    {
-      id: 1,
-      name: "HRD Design",
-      color: "bg-watermelon-red",
-      link: "/hrd-design",
-    },
-    {
-      id: 2,
-      name: "Website Design",
-      color: "bg-blue-500",
-      link: "/website-design",
-    },
-    {
-      id: 3,
-      name: "Mobile Design",
-      color: "bg-green-800",
-      link: "/mobile-design",
-    },
-    {
-      id: 4,
-      name: "Spring Boot",
-      color: "bg-purple-500",
-      link: "/spring-boot",
-    },
-  ]);
-
+  const [workspaces, setWorkspaces] = useState([]);
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-teal-500",
+  ];
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
-
   const handleAddWorkspace = () => {
     if (newWorkspaceName.trim() !== "") {
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
       const newWorkspace = {
         id: workspaces.length + 1,
         name: newWorkspaceName,
-        color: "bg-gray-500", // Default color for new workspaces
+        color: randomColor, // Assign a random color
         link: `/workspace-${workspaces.length + 1}`,
       };
       setWorkspaces([...workspaces, newWorkspace]);
