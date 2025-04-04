@@ -24,6 +24,9 @@ export default function SidebarComponent() {
     "bg-teal-500",
   ];
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
+  const [renameWorkspaceId, setRenameWorkspaceId] = useState(null);
+  const [renameWorkspaceName, setRenameWorkspaceName] = useState("");
+
   const handleAddWorkspace = () => {
     if (newWorkspaceName.trim() !== "") {
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -31,11 +34,25 @@ export default function SidebarComponent() {
       const newWorkspace = {
         id: workspaces.length + 1,
         name: newWorkspaceName,
-        color: randomColor, // Assign a random color
+        color: randomColor,
         link: `/workspace-${workspaces.length + 1}`,
       };
       setWorkspaces([...workspaces, newWorkspace]);
-      setNewWorkspaceName(""); // Clear input after adding
+      setNewWorkspaceName("");
+    }
+  };
+
+  const handleRenameWorkspace = () => {
+    if (renameWorkspaceName.trim() !== "") {
+      setWorkspaces((prevWorkspaces) =>
+        prevWorkspaces.map((workspace) =>
+          workspace.id === renameWorkspaceId
+            ? { ...workspace, name: renameWorkspaceName }
+            : workspace
+        )
+      );
+      setRenameWorkspaceId(null);
+      setRenameWorkspaceName("");
     }
   };
 
@@ -98,7 +115,39 @@ export default function SidebarComponent() {
                   {workspace.name}
                 </span>
               </Link>
-              <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
+              <Dialog>
+                <DialogTrigger>
+                  <Ellipsis
+                    className="w-6 h-6 cursor-pointer"
+                    color="#94A3B8"
+                  />
+                </DialogTrigger>
+                <DialogContent className="bg-white text-black rounded-lg shadow-lg">
+                  <DialogHeader>
+                    <DialogTitle className="font-medium mt-4">
+                      Rename Workspace
+                    </DialogTitle>
+                    <DialogDescription>
+                      <Input
+                        value={renameWorkspaceName}
+                        onChange={(e) => setRenameWorkspaceName(e.target.value)}
+                        placeholder="New Workspace Name"
+                      />
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          onClick={() => {
+                            setRenameWorkspaceId(workspace.id);
+                            handleRenameWorkspace();
+                          }}
+                          className="bg-[#009990] self-end text-white mt-4 rounded-lg px-4 py-2"
+                        >
+                          Rename
+                        </Button>
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
             </li>
           ))}
         </ul>
