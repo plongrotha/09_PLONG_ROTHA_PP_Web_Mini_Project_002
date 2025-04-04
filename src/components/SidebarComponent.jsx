@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Star, Ellipsis, SquarePlus, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
@@ -13,9 +13,51 @@ import {
 import { Input } from "./ui/input";
 
 export default function SidebarComponent() {
+  const [workspaces, setWorkspaces] = useState([
+    {
+      id: 1,
+      name: "HRD Design",
+      color: "bg-watermelon-red",
+      link: "/hrd-design",
+    },
+    {
+      id: 2,
+      name: "Website Design",
+      color: "bg-blue-500",
+      link: "/website-design",
+    },
+    {
+      id: 3,
+      name: "Mobile Design",
+      color: "bg-green-800",
+      link: "/mobile-design",
+    },
+    {
+      id: 4,
+      name: "Spring Boot",
+      color: "bg-purple-500",
+      link: "/spring-boot",
+    },
+  ]);
+
+  const [newWorkspaceName, setNewWorkspaceName] = useState("");
+
+  const handleAddWorkspace = () => {
+    if (newWorkspaceName.trim() !== "") {
+      const newWorkspace = {
+        id: workspaces.length + 1,
+        name: newWorkspaceName,
+        color: "bg-gray-500", // Default color for new workspaces
+        link: `/workspace-${workspaces.length + 1}`,
+      };
+      setWorkspaces([...workspaces, newWorkspace]);
+      setNewWorkspaceName(""); // Clear input after adding
+    }
+  };
+
   return (
     <>
-      <div className="h-full px-3 py-4 overflow-y-auto  dark:bg-gray-800">
+      <div className="h-full px-3 py-4 overflow-y-auto dark:bg-gray-800">
         <ul className="space-y-4 font-medium">
           <li className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             <Link href="/hrd-design" className="flex items-center space-x-3">
@@ -25,7 +67,6 @@ export default function SidebarComponent() {
             </Link>
             <Dialog>
               <DialogTrigger>
-                {" "}
                 <Button className="cursor-pointer">
                   <SquarePlus className="w-10 h-10" color="#94A3B8" />
                 </Button>
@@ -33,12 +74,19 @@ export default function SidebarComponent() {
               <DialogContent className="bg-white text-black rounded-lg shadow-lg">
                 <DialogHeader>
                   <DialogTitle className="font-medium mt-4">
-                    Create New WorkSpace
+                    Create New Workspace
                   </DialogTitle>
                   <DialogDescription>
-                    <Input />
+                    <Input
+                      value={newWorkspaceName}
+                      onChange={(e) => setNewWorkspaceName(e.target.value)}
+                      placeholder="Workspace Name"
+                    />
                     <div className="flex justify-end mt-4">
-                      <Button className="bg-[#009990] self-end text-white mt-4 rounded-lg px-4 py-2">
+                      <Button
+                        onClick={handleAddWorkspace}
+                        className="bg-[#009990] self-end text-white mt-4 rounded-lg px-4 py-2"
+                      >
                         Create
                       </Button>
                     </div>
@@ -48,121 +96,48 @@ export default function SidebarComponent() {
             </Dialog>
           </li>
         </ul>
+
         <ul className="space-y-4 font-medium">
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/hrd-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-watermelon-red`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                HRD Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link
-              href="/website-design"
-              className="flex items-center space-x-3"
+          {workspaces.map((workspace) => (
+            <li
+              key={workspace.id}
+              className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
             >
-              <div className={`rounded-full w-3 h-3 bg-blue-500`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Website Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/mobile-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-green-800`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Mobile Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-
-          <li className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/mobile-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-purple-500`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Spring Boot
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
+              <Link
+                href={workspace.link}
+                className="flex items-center space-x-3"
+              >
+                <div
+                  className={`rounded-full w-3 h-3 ${workspace.color}`}
+                ></div>
+                <span className="text-gray-700 dark:text-gray-300">
+                  {workspace.name}
+                </span>
+              </Link>
+              <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
+            </li>
+          ))}
         </ul>
 
-        {/* below favorite sizeBar  */}
-
-        <ul className="space-y-4 font-medium mt-[74px] ">
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+        <ul className="space-y-4 font-medium mt-[74px]">
+          <li className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             <Link href="/hrd-design" className="flex items-center space-x-3">
               <span className="text-[#94A3B8] font-medium text-2xl dark:text-gray-300">
                 Favorite
               </span>
             </Link>
-            <Button className=" cursor-pointer">
+            <Button className="cursor-pointer">
               <Star color="#94A3B8" />
             </Button>
           </li>
         </ul>
-        <ul className="space-y-4 font-medium">
-          {/* HRD Design */}
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/hrd-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-watermelon-red`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                HRD Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
 
-          {/* Website Design */}
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link
-              href="/website-design"
-              className="flex items-center space-x-3"
-            >
-              <div className={`rounded-full w-3 h-3 bg-blue-500`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Website Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-
-          {/* Mobile Design */}
-          <li className="flex items-center justify-between  p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/mobile-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-green-800`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Mobile Design
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-          {/* Spring Boot */}
-          <li className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Link href="/mobile-design" className="flex items-center space-x-3">
-              <div className={`rounded-full w-3 h-3 bg-purple-500`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
-                Spring Boot
-              </span>
-            </Link>
-            <Ellipsis className="w-6 h-6 cursor-pointer" color="#94A3B8" />
-          </li>
-        </ul>
-
-        {/*  log out here */}
-        <ul className="text-center flex items-center justify-center mt-[74px] ">
+        <ul className="text-center flex items-center justify-center mt-[74px]">
           <li className="flex space-x-2">
             <Link
               href="/login"
               className="flex items-center space-x-3 text-[#009990]"
             >
-              {/* At login page not yet prevent when user input not thing teacher */}
               <LogOut className="w-6 h-6 cursor-pointer" color="#009990" />
               <span className="text-gray-700 font-bold dark:text-gray-300">
                 Logout

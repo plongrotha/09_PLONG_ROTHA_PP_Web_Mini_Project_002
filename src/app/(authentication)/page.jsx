@@ -20,7 +20,6 @@ export default function Home() {
               <CardComponent />
               <CardComponent />
               <CardComponent />
-              <CardComponent />
             </div>
           </div>
         </div>
